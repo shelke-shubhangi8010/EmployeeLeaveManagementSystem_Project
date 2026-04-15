@@ -1,47 +1,41 @@
 package com.elms;
 
 
-import java.io.*;
-import java.sql.*;
-import com.elms.*;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-        throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
-        try {
-            Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(
-                "SELECT * FROM users WHERE email=? AND password=?"
+        if (username.equals("admin") && password.equals("123")) {
+
+            HttpSession session = request.getSession();
+            session.setAttribute("user", username);
+
+            response.sendRedirect("adminDashboard.html");
+        }
+
+        else if (username.equals("emp") && password.equals("123")) {
+
+            HttpSession session = request.getSession();
+            session.setAttribute("user", username);
+
+            response.sendRedirect("employeeDashboard.html");
+        }
+
+        else {
+            response.getWriter().println(
+                "<h3 style='color:red;text-align:center;'>Invalid Username or Password</h3>"
             );
-
-            ps.setString(1, email);
-            ps.setString(2, password);
-
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()) {
-                String role = rs.getString("role");
-
-                if(role.equals("admin")) {
-                    res.sendRedirect("admin/dashboard.jsp");
-                } else {
-                    res.sendRedirect("employee/dashboard.jsp");
-                }
-            } else {
-                res.getWriter().println("Invalid Login");
-            }
-
-        } catch(Exception e) {
-            e.printStackTrace();
         }
     }
 }

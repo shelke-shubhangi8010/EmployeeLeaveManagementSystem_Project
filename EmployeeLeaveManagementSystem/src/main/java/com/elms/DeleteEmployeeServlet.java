@@ -6,8 +6,8 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 
-@WebServlet("/ApproveServlet")
-public class ApproveServlet extends HttpServlet {
+@WebServlet("/DeleteEmployeeServlet")
+public class DeleteEmployeeServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -20,15 +20,16 @@ public class ApproveServlet extends HttpServlet {
                 "jdbc:mysql://localhost:3306/elms", "root", "root");
 
             PreparedStatement ps = con.prepareStatement(
-                "UPDATE leave_requests SET status='Approved' WHERE id=?");
+                "DELETE FROM employees WHERE id=?");
 
             ps.setInt(1, id);
             ps.executeUpdate();
 
-            response.sendRedirect("ViewLeaveServlet");
+            response.sendRedirect("ViewEmployeeServlet");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+

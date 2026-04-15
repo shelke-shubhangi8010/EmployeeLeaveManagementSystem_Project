@@ -1,13 +1,15 @@
 package com.elms;
 
+
+
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 
-@WebServlet("/ApproveServlet")
-public class ApproveServlet extends HttpServlet {
+@WebServlet("/RejectServlet")
+public class RejectServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -20,7 +22,7 @@ public class ApproveServlet extends HttpServlet {
                 "jdbc:mysql://localhost:3306/elms", "root", "root");
 
             PreparedStatement ps = con.prepareStatement(
-                "UPDATE leave_requests SET status='Approved' WHERE id=?");
+                "UPDATE leave_requests SET status='Rejected' WHERE id=?");
 
             ps.setInt(1, id);
             ps.executeUpdate();
